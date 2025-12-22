@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: notifyflux
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: .
+      dockerfile: src/NotifyFlux.Api/Dockerfile
+    env_file:
+      - src/NotifyFlux.Api/.env
+    depends_on:
+      - mongo
+      - redis
+    ports:
+      - "4000:4000"
+
+  web:
+    build:
+      context: .
+      dockerfile: src/NotifyFlux.Web/Dockerfile
+    env_file:
+      - src/NotifyFlux.Web/.env
+    depends_on:
+      - api
+    ports:
+      - "5173:80"
+
+volumes:
+  mongo_data:
+  redis_data:

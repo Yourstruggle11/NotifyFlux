@@ -1,0 +1,20 @@
+{
+  "name": "notifyflux-monorepo",
+  "private": true,
+  "workspaces": [
+    "src/NotifyFlux.Api",
+    "src/NotifyFlux.Web"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "npm --workspace src/NotifyFlux.Api run dev",
+    "dev:web": "npm --workspace src/NotifyFlux.Web run dev",
+    "build": "npm --workspace src/NotifyFlux.Api run build && npm --workspace src/NotifyFlux.Web run build",
+    "lint": "npm --workspace src/NotifyFlux.Api run lint && npm --workspace src/NotifyFlux.Web run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
