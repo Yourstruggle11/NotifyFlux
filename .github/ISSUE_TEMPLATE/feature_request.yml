@@ -1,0 +1,56 @@
+name: Feature Request
+description: Request a new NotifyFlux feature.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the feature with tenant and real-time implications in mind.
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Which area does this impact?
+      options:
+        - API
+        - Web
+        - Docker
+        - CI
+        - Docs
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: tenant_impact
+    attributes:
+      label: Tenant impact
+      description: Is the feature single-tenant or cross-tenant?
+      options:
+        - single-tenant
+        - cross-tenant
+        - unknown
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem are you trying to solve?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe the feature, including API/UI changes or socket events.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context

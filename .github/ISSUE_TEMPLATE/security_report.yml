@@ -1,0 +1,62 @@
+name: Security Report
+description: Report a security vulnerability in NotifyFlux.
+title: "[Security]: "
+labels: ["security"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Do not disclose security issues publicly.**
+        Please review SECURITY.md for responsible disclosure instructions before filing.
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Disclosure policy
+      options:
+        - label: I have read SECURITY.md and will not publicly disclose the issue.
+          required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - API
+        - Web
+        - Docker
+        - CI
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: tenant_impact
+    attributes:
+      label: Tenant impact
+      options:
+        - single-tenant
+        - cross-tenant
+        - unknown
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe the vulnerability.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce (if safe)
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: What could an attacker do?
+    validations:
+      required: true
+  - type: input
+    id: contact
+    attributes:
+      label: Contact (email or handle)
+      placeholder: you@example.com

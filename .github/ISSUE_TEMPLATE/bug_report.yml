@@ -1,0 +1,81 @@
+name: Bug Report
+description: Report a NotifyFlux bug (real-time, multi-tenant, socket-based).
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve NotifyFlux. Please provide clear, tenant-scoped details.
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Where does the issue occur?
+      options:
+        - API
+        - Web
+        - Docker
+        - CI
+        - Docs
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: tenant_impact
+    attributes:
+      label: Tenant impact
+      description: Does this affect a single tenant or multiple tenants?
+      options:
+        - single-tenant
+        - cross-tenant
+        - unknown
+    validations:
+      required: true
+  - type: input
+    id: tenant_id
+    attributes:
+      label: Tenant ID (if applicable)
+      placeholder: demo-tenant
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Provide exact steps to reproduce.
+      placeholder: |
+        1. Login as admin...
+        2. POST /api/:tenantId/notifications...
+        3. Observe socket event...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / request IDs / socket IDs
+      description: Include relevant logs or request IDs (redact secrets).
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version/commit
+      placeholder: git SHA or tag
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety checks
+      options:
+        - label: I have removed secrets from logs, screenshots, and requests.
+          required: true
