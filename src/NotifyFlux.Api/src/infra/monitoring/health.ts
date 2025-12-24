@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getDb, connectMongo } from "../db/mongo";
+import { connectMongo } from "../db/mongo";
 import { getRedisClient } from "../redis/redis";
 
 export const healthHandler = (_req: Request, res: Response): void => {

@@ -39,5 +39,6 @@ export const meHandler = async (req: AuthenticatedRequest, res: Response): Promi
     return;
   }
   const { passwordHash, ...safeUser } = user;
+  void passwordHash;
   res.json({ user: safeUser });
 };

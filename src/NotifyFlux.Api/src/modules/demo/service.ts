@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import { randomUUID } from "crypto";
 import { CreateNotificationInput, NotificationDocument } from "../notifications/model";
 import { createNotification } from "../notifications/service";
 import { getUsersCollection, getNotificationsCollection } from "../../infra/db/mongo";

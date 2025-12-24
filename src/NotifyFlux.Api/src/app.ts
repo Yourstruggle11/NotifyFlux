@@ -26,6 +26,7 @@ export const createApp = (): Application => {
   app.use("/api/:tenantId/demo", demoRoutes);
 
   app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    void _next;
     const status = err instanceof HttpError ? err.statusCode : 500;
     res.status(status).json({ message: err.message });
   });

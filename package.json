@@ -12,7 +12,8 @@
     "build": "npm --workspace src/NotifyFlux.Api run build && npm --workspace src/NotifyFlux.Web run build",
     "lint": "npm --workspace src/NotifyFlux.Api run lint && npm --workspace src/NotifyFlux.Web run lint",
     "typecheck": "npm --workspace src/NotifyFlux.Api run typecheck && npm --workspace src/NotifyFlux.Web run typecheck",
-    "test": "npm --workspace src/NotifyFlux.Api run test && npm --workspace src/NotifyFlux.Web run test"
+    "test": "npm --workspace src/NotifyFlux.Api run test && npm --workspace src/NotifyFlux.Web run test",
+    "sanity": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "devDependencies": {
     "concurrently": "^8.0.0",

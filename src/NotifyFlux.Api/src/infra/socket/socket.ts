@@ -1,5 +1,5 @@
 import { Server as HttpServer } from "http";
-import { Server, Socket } from "socket.io";
+import { Server, Socket, DefaultEventsMap } from "socket.io";
 import { createAdapter } from "@socket.io/redis-adapter";
 import { env } from "../../config/env";
 import { getRedisAdapterClients } from "../redis/redis";
@@ -14,19 +14,29 @@ type SocketAuthData = {
   readonly roles: ReadonlyArray<Role>;
 };
 
-type AuthedSocket = Socket & { readonly data: Socket["data"] & { auth?: SocketAuthData } };
+type SocketData = { auth?: SocketAuthData };
+type NotifyServer = Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>;
+type AuthedSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>;
 
-let io: Server | null = null;
+let io: NotifyServer | null = null;
 
 const userRoom = (tenantId: string, userId: string): string => `tenant:${tenantId}:user:${userId}`;
 const tenantRoom = (tenantId: string): string => `tenant:${tenantId}`;
 
-export const initSocketServer = async (httpServer: HttpServer): Promise<Server> => {
+const readToken = (input: unknown): string | null => {
+  if (typeof input !== "object" || input === null) {
+    return null;
+  }
+  const token = (input as Record<string, unknown>).token;
+  return typeof token === "string" ? token : null;
+};
+
+export const initSocketServer = async (httpServer: HttpServer): Promise<NotifyServer> => {
   if (io) {
     return io;
   }
 
-  io = new Server(httpServer, {
+  io = new Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, SocketData>(httpServer, {
     cors: {
       origin: env.socketCorsOrigin,
       methods: ["GET", "POST"]
@@ -36,12 +46,18 @@ export const initSocketServer = async (httpServer: HttpServer): Promise<Server> 
   const { pubClient, subClient } = await getRedisAdapterClients();
   io.adapter(createAdapter(pubClient, subClient));
 
+  const extractToken = (socket: AuthedSocket): string | null => {
+    const rawAuth = socket.handshake.auth as unknown;
+    const rawQuery = socket.handshake.query as unknown;
+    const fromAuth = readToken(rawAuth);
+    if (fromAuth) {
+      return fromAuth;
+    }
+    return readToken(rawQuery);
+  };
+
   io.use((socket, next) => {
-    const rawToken = typeof socket.handshake.auth?.token === "string"
-      ? socket.handshake.auth.token
-      : typeof socket.handshake.query.token === "string"
-        ? socket.handshake.query.token
-        : null;
+    const rawToken = extractToken(socket);
 
     if (!rawToken) {
       return next(new Error("Unauthorized"));
@@ -54,7 +70,7 @@ export const initSocketServer = async (httpServer: HttpServer): Promise<Server> 
         userId: payload.userId,
         roles: payload.roles
       };
-      (socket as AuthedSocket).data.auth = authData;
+      socket.data.auth = authData;
       socket.join([userRoom(payload.tenantId, payload.userId), tenantRoom(payload.tenantId)]);
       return next();
     } catch (error) {
@@ -62,7 +78,7 @@ export const initSocketServer = async (httpServer: HttpServer): Promise<Server> 
     }
   });
 
-  io.on("connection", (socket: AuthedSocket) => {
+  io.on("connection", (socket) => {
     const auth = socket.data.auth;
     incrementConnectedSockets();
     logger.info({ socketId: socket.id, auth }, "Socket connected");
@@ -76,7 +92,7 @@ export const initSocketServer = async (httpServer: HttpServer): Promise<Server> 
   return io;
 };
 
-const getSocketServer = (): Server => {
+const getSocketServer = (): NotifyServer => {
   if (!io) {
     throw new Error("Socket server not initialized");
   }
