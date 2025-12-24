@@ -10,7 +10,9 @@
     "dev:api": "npm --workspace src/NotifyFlux.Api run dev",
     "dev:web": "npm --workspace src/NotifyFlux.Web run dev",
     "build": "npm --workspace src/NotifyFlux.Api run build && npm --workspace src/NotifyFlux.Web run build",
-    "lint": "npm --workspace src/NotifyFlux.Api run lint && npm --workspace src/NotifyFlux.Web run lint"
+    "lint": "npm --workspace src/NotifyFlux.Api run lint && npm --workspace src/NotifyFlux.Web run lint",
+    "typecheck": "npm --workspace src/NotifyFlux.Api run typecheck && npm --workspace src/NotifyFlux.Web run typecheck",
+    "test": "npm --workspace src/NotifyFlux.Api run test && npm --workspace src/NotifyFlux.Web run test"
   },
   "devDependencies": {
     "concurrently": "^8.0.0",

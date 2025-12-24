@@ -9,7 +9,9 @@
     "start": "node dist/src/index.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "seed": "ts-node -r dotenv/config scripts/seedDemo.ts",
-    "seed:prod": "node dist/scripts/seedDemo.js"
+    "seed:prod": "node dist/scripts/seedDemo.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node -e \"console.log('TODO: add unit/integration tests')\""
   },
   "dependencies": {
     "@socket.io/redis-adapter": "^8.2.0",
