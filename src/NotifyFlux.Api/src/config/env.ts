@@ -13,7 +13,12 @@ const EnvSchema = z.object({
   JWT_SECRET: z.string().min(12),
   SOCKET_IO_CORS_ORIGIN: z.string().min(1).default("http://localhost:5173"),
   NOTIFYFLUX_TENANT_ID_SALT: z.string().min(1).default("tenant-salt"),
-  NODE_ENV: z.enum(["development", "production", "test"]).default("development")
+  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
+  RATE_LIMIT_DEFAULT_MAX: z.coerce.number().int().positive().default(60),
+  RATE_LIMIT_LOGIN_MAX: z.coerce.number().int().positive().default(10),
+  RATE_LIMIT_SERVICE_TOKEN_MAX: z.coerce.number().int().positive().default(5),
+  RATE_LIMIT_KEY_PREFIX: z.string().min(1).default("notifyflux:rate-limit")
 });
 
 const parsed = EnvSchema.safeParse(process.env);
@@ -34,5 +39,10 @@ export const env = {
   jwtSecret: parsed.data.JWT_SECRET,
   socketCorsOrigin: parsed.data.SOCKET_IO_CORS_ORIGIN,
   tenantIdSalt: parsed.data.NOTIFYFLUX_TENANT_ID_SALT,
-  nodeEnv: parsed.data.NODE_ENV
+  nodeEnv: parsed.data.NODE_ENV,
+  rateLimitWindowMs: parsed.data.RATE_LIMIT_WINDOW_MS,
+  rateLimitDefaultMax: parsed.data.RATE_LIMIT_DEFAULT_MAX,
+  rateLimitLoginMax: parsed.data.RATE_LIMIT_LOGIN_MAX,
+  rateLimitServiceTokenMax: parsed.data.RATE_LIMIT_SERVICE_TOKEN_MAX,
+  rateLimitKeyPrefix: parsed.data.RATE_LIMIT_KEY_PREFIX
 } as const;

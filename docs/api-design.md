@@ -28,6 +28,7 @@ Base path (tenant-scoped): `/api/:tenantId`
 - All tenant endpoints require `Authorization: Bearer <JWT>`.
 - Tenancy is enforced by matching the path `tenantId` to the JWT `tenantId`.
 - Versioning can be introduced via `/v1/api/:tenantId/...` if needed.
+- Auth endpoints are rate-limited to reduce brute-force attempts.
 
 ## Example requests
 ```bash
