@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
 export type HealthStatus = { readonly status: string; readonly error?: string };
 

@@ -16,7 +16,8 @@ export const connectSocket = (token: string): NotifyFluxSocket => {
   if (socket) {
     socket.disconnect();
   }
-  socket = io(import.meta.env.VITE_SOCKET_URL, {
+  const socketUrl = import.meta.env.VITE_SOCKET_URL || "http://localhost:4000";
+  socket = io(socketUrl, {
     auth: { token },
     autoConnect: true,
     reconnection: true

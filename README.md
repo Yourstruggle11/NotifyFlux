@@ -13,6 +13,7 @@ NotifyFlux is a production-grade, multi-tenant SaaS notification platform that d
 2. Run `npm install` at the repo root to install workspace dependencies.
 3. Start the stack via Docker Compose:
    - `docker compose up -d` (MongoDB, Redis, API, Web served via Nginx).
+   - Mongo runs as a single-node replica set in Docker Compose to support change streams.
 4. For local dev without Docker Compose:
    - `npm run dev:api`
    - `npm run dev:web`

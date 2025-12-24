@@ -1,15 +1,27 @@
-version: "3.9"
-
 services:
   mongo:
     image: mongo:6
     restart: unless-stopped
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     ports:
       - "27017:27017"
     environment:
       MONGO_INITDB_DATABASE: notifyflux
     volumes:
       - mongo_data:/data/db
+
+  mongo-init:
+    image: mongo:6
+    depends_on:
+      - mongo
+    restart: "no"
+    entrypoint:
+      - sh
+      - -c
+      - >
+        sleep 2;
+        mongosh --host mongo:27017 --eval "rs.status().ok" ||
+        mongosh --host mongo:27017 --eval "rs.initiate({_id:'rs0', members:[{_id:0, host:'mongo:27017'}]})";
 
   redis:
     image: redis:7
@@ -33,6 +45,10 @@ services:
     build:
       context: .
       dockerfile: src/NotifyFlux.Web/Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:4000}
+        VITE_SOCKET_URL: ${VITE_SOCKET_URL:-http://localhost:4000}
+        VITE_DEFAULT_TENANT_ID: ${VITE_DEFAULT_TENANT_ID:-demo-tenant}
     env_file:
       - src/NotifyFlux.Web/.env
     depends_on:

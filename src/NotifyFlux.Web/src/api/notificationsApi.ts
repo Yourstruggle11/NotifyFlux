@@ -1,6 +1,6 @@
 import { Notification } from "../types";
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
 export const getNotifications = async (tenantId: string, token: string): Promise<Notification[]> => {
   const res = await fetch(`${baseUrl}/api/${tenantId}/notifications`, {

@@ -1,6 +1,6 @@
 import { UserProfile } from "../types";
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
 export const getCurrentUser = async (tenantId: string, token: string): Promise<UserProfile> => {
   const res = await fetch(`${baseUrl}/api/${tenantId}/users/me`, {
