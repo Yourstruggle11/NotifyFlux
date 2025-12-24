@@ -29,9 +29,14 @@ export const InboxPage = (): JSX.Element => {
     }
 
     try {
+      const targetUserId = form.userId.trim();
+      if (!targetUserId) {
+        setCreateError("Target user id is required");
+        return;
+      }
       const metadata = form.metadata ? JSON.parse(form.metadata) as Record<string, string | number | boolean | null> : undefined;
       await createNotification(state.tenantId, state.token, {
-        userId: form.userId || state.userId || "",
+        userId: targetUserId,
         type: form.type,
         message: form.message,
         metadata
@@ -70,10 +75,15 @@ export const InboxPage = (): JSX.Element => {
               </div>
             </div>
             <form onSubmit={onCreateNotification} className="stack">
-              <label>
-                Target User ID
-                <input value={form.userId} placeholder={state.userId ?? ""} onChange={(e) => setForm({ ...form, userId: e.target.value })} />
-              </label>
+            <label>
+              Target User ID
+              <input
+                value={form.userId}
+                placeholder={state.userId ?? "user-id"}
+                onChange={(e) => setForm({ ...form, userId: e.target.value })}
+                required
+              />
+            </label>
               <label>
                 Type
                 <input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} required />
